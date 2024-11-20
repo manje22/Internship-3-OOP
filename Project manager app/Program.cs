@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Project_manager_app.Classes;
+using System.Globalization;
 
 namespace Project_manager_app
 {
@@ -37,6 +38,7 @@ namespace Project_manager_app
                         PrintAllProjectsAndProjectTasks(mainDict);
                         break;
                     case "2":
+                        AddNewProjectUser(mainDict);
                         break;
                     case "3":
                         break;
@@ -58,6 +60,33 @@ namespace Project_manager_app
             
         }
 
+        static string NameInputByUser(Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+            var input = "";
+            var exists = false;
+
+            while (true)
+            {
+                do
+                {
+                    Console.Write("Unesite željeni naziv: ");
+                    input = Console.ReadLine().ToLower().Trim();
+                } while (String.IsNullOrEmpty(input));
+
+                foreach (var item in mainDict.Keys)
+                {
+                    if (item.Name == input)
+                    {
+                        Console.WriteLine("Uneseno ime projekta već postoji, probajte opet");
+                        exists = true; break;
+                    }
+                }
+
+                if (!exists)
+                    return input;
+            }
+        }
+
         static void PrintAllProjectsAndProjectTasks(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju ispisa svih projekata s pripadajucim zadacima");
@@ -71,6 +100,48 @@ namespace Project_manager_app
                     Console.WriteLine($" - {projectTask.Name}");
                 }
             }
+        }
+
+        static DateTime UserInputDate()
+        {
+            DateTime startDate = DateTime.Now;
+
+            var validDate = false;
+            while (!validDate)
+            {
+                Console.WriteLine("Unesite datum rodenja (YYYY-MM-DD): ");
+                var dateInput = Console.ReadLine();
+
+                validDate = DateTime.TryParseExact(dateInput, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
+
+                if (!validDate)
+                {
+                    Console.WriteLine("Krivo unesen datum probajte opet: ");
+                }
+            }
+
+            return startDate;
+        }
+
+        static void AddNewProjectUser(Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+            Console.WriteLine("Odabrali ste opciju unos novog projekta");
+            //f-ja za unos imena (postoji li)
+            //f-ja za unos valjanog datuma
+
+            var newName = NameInputByUser(mainDict);
+            var description = "";
+            do
+            {
+                Console.Write("Unesite željeni naziv: ");
+                description = Console.ReadLine().ToLower().Trim();
+            } while (String.IsNullOrEmpty(description));
+
+            var startDate = UserInputDate();
+
+            var newProject = new Project(newName, description, startDate);
+
+            mainDict.Add(newProject, newProject.Tasks);
         }
 
         static void ProjectMenu()
