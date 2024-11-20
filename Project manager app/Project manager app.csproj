@@ -44,7 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\Project.cs" />
-    <Compile Include="Classes\Task.cs" />
+    <Compile Include="Classes\ProjectTask.cs" />
     <Compile Include="Enum\Status.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
