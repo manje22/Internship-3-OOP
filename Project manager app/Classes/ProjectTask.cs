@@ -11,16 +11,18 @@ namespace Project_manager_app.Classes
     {
         public string Name { get; set; }
         public string Description { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime DueDate { get; set; }
         public Status Status { get; set; }
+        public int ExpectedDuration { get; set; }
+        public Project ParentProject { get; set; }
 
-        public ProjectTask(string name, string description, DateTime startDate)
+        public ProjectTask(string name, string description, DateTime dueDate, Project parentProject, int expD)
         {
             Name = name;
             Description = description;
-            StartDate = startDate;
-            EndDate = DateTime.MaxValue;
+            DueDate = dueDate;
+            ParentProject = parentProject;
+            ExpectedDuration = expD;
             Status = Status.Waiting;
         }
     }
