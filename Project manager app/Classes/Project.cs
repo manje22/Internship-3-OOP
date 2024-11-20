@@ -15,6 +15,8 @@ namespace Project_manager_app.Classes
         public DateTime EndDate { get; set; }
         public Status Status { get; set; }
 
+        public List<ProjectTask> Tasks { get; set; }
+
         public Project(string name, string description, DateTime startDate) 
         {
             Name = name;
@@ -22,6 +24,7 @@ namespace Project_manager_app.Classes
             StartDate = startDate;
             EndDate = DateTime.MaxValue;
             Status = Status.Waiting;
+            Tasks = new List<ProjectTask>();
         }
     }
 }
