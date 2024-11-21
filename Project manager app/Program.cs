@@ -41,6 +41,7 @@ namespace Project_manager_app
                         AddNewProjectUser(mainDict);
                         break;
                     case "3":
+                        DeleteProject(mainDict);
                         break;
                     case "4":
                         break;
@@ -60,13 +61,85 @@ namespace Project_manager_app
             
         }
 
+        static Project ChooseProject (Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+            
+            var input = "";
+            while (true)
+            {
+                do
+                {
+                    Console.Write("Unesite željeni projekt: ");
+                    input = Console.ReadLine().ToLower().Trim();
+                } while (String.IsNullOrEmpty(input));
+
+                var exists = false;
+                foreach (var item in mainDict.Keys)
+                {
+                    if (item.Name == input)
+                    {
+                        exists = true;
+                        return item;
+                    }
+                }
+
+                if (!exists)
+                {
+                    Console.WriteLine("Uneseni projekt ne postoji\n");
+                }
+
+            }
+        }
+
+        static bool UserYesOrNo()
+        {
+            var input = "";
+            while (true)
+            {
+                do
+                {
+                    input = Console.ReadLine().ToLower().Trim();
+                } while (String.IsNullOrEmpty(input));
+
+                if (input == "d")
+                {
+                    return true;
+                }
+                else if(input == "n")
+                {
+                    return false;
+                }
+                else
+                    Console.WriteLine("Unesite ili d ili n: ");
+            }
+            
+        }
+
+        static void DeleteProject(Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+            var projectToBeDeleted = ChooseProject(mainDict);
+            Console.WriteLine("Uspjesno ste odabrali project, jeste sigurni da zelite nastavit s brisanjem (d/n)");
+            var confirmation = UserYesOrNo();
+
+            if (confirmation)
+            {
+                mainDict.Remove(projectToBeDeleted);
+                Console.WriteLine("Uspjeno izbrisan projekt");
+            }
+            else
+                Console.WriteLine("Operacija brisanja odkazana");
+
+            Console.WriteLine("Pritisnite bilo koji kljuc za povratak na glavni izbornik...");
+            Console.ReadKey();
+
+        }
+
         static string NameInputByUser(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             var input = "";
 
             while (true)
             {
-                //zasto ide dva
                 do
                 {
                     Console.Write("Unesite željeni naziv: ");
