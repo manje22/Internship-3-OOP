@@ -63,43 +63,53 @@ namespace Project_manager_app
         static string NameInputByUser(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             var input = "";
-            var exists = false;
 
             while (true)
             {
+                //zasto ide dva
                 do
                 {
                     Console.Write("Unesite željeni naziv: ");
                     input = Console.ReadLine().ToLower().Trim();
                 } while (String.IsNullOrEmpty(input));
 
+                var exists = false;
                 foreach (var item in mainDict.Keys)
                 {
                     if (item.Name == input)
                     {
                         Console.WriteLine("Uneseno ime projekta već postoji, probajte opet");
-                        exists = true; break;
+                        exists = true;
+                        break;
                     }
                 }
 
                 if (!exists)
+                {
+                    Console.WriteLine("Uspjesno ste unili ime!");
                     return input;
+                }
+                    
             }
         }
 
         static void PrintAllProjectsAndProjectTasks(Dictionary<Project, List<ProjectTask>> mainDict)
         {
+            Console.WriteLine("\n\n");
             Console.WriteLine("Odabrali ste opciju ispisa svih projekata s pripadajucim zadacima");
             Console.WriteLine("\n");
 
             foreach (var keyValuePair in mainDict)
             {
-                Console.WriteLine($"Projekt {keyValuePair.Key.Name}: ");
+                Console.WriteLine($"Projekt {keyValuePair.Key.Name}: \nOpis: {keyValuePair.Key.Description}\nPocetni datum: {keyValuePair.Key.StartDate}\n");
                 foreach (var projectTask in keyValuePair.Value)
                 {
                     Console.WriteLine($" - {projectTask.Name}");
                 }
             }
+
+            Console.WriteLine("Pritisnite bilo koju tipku za povratak na glavni izbornik...");
+            Console.ReadKey();
         }
 
         static DateTime UserInputDate()
@@ -109,7 +119,7 @@ namespace Project_manager_app
             var validDate = false;
             while (!validDate)
             {
-                Console.WriteLine("Unesite datum rodenja (YYYY-MM-DD): ");
+                Console.WriteLine("Unesite datum pocetka projekta (YYYY-MM-DD): ");
                 var dateInput = Console.ReadLine();
 
                 validDate = DateTime.TryParseExact(dateInput, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
@@ -133,8 +143,8 @@ namespace Project_manager_app
             var description = "";
             do
             {
-                Console.Write("Unesite željeni naziv: ");
-                description = Console.ReadLine().ToLower().Trim();
+                Console.Write("Unesite željeni opis: ");
+                description = Console.ReadLine().Trim();
             } while (String.IsNullOrEmpty(description));
 
             var startDate = UserInputDate();
@@ -142,6 +152,9 @@ namespace Project_manager_app
             var newProject = new Project(newName, description, startDate);
 
             mainDict.Add(newProject, newProject.Tasks);
+
+            Console.WriteLine("\n\n\nUspjesno unesen novi project, pristisnite bilo koju tipku za povratak na glavni izbornik...");
+            Console.ReadKey();
         }
 
         static void ProjectMenu()
