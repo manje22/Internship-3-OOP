@@ -26,5 +26,20 @@ namespace Project_manager_app.Classes
             Status = Status.Waiting;
             Tasks = new List<ProjectTask>();
         }
+
+        public void SetStatusToActive()
+        {
+            Status = Status.Active;
+        }
+
+        public void SetStatusToAFinished()
+        {
+            Status = Status.Finished;
+        }
+
+        public void SetStatusToWaiting()
+        {
+            Status = Status.Waiting;
+        }
     }
 }

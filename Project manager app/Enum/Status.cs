@@ -10,7 +10,6 @@ namespace Project_manager_app.Enum
     {
         Active,
         Waiting,
-        Finished,
-        Postponed
+        Finished
     }
 }

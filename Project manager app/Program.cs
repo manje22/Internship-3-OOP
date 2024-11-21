@@ -28,7 +28,7 @@ namespace Project_manager_app
                 Console.WriteLine("5. Prikaz  projekata filtriranih po status (samo aktivni, ili samo završeni, ili samo na čekanju)");
                 Console.WriteLine("6. Upravljanje pojedinim projektom");
                 Console.WriteLine("7. Upravljanje pojedinim zadatkom0");
-                Console.WriteLine("Pritisnite q za kraj rada");
+                Console.WriteLine("\nPritisnite q za kraj rada");
 
                  input = Console.ReadLine()?.ToLower().Trim();
 
@@ -124,7 +124,7 @@ namespace Project_manager_app
                 var exists = false;
                 foreach (var item in mainDict.Keys)
                 {
-                    if (item.Name == input)
+                    if (item.Name.ToLower().Trim() == input)
                     {
                         exists = true;
                         return item;
@@ -214,12 +214,8 @@ namespace Project_manager_app
             }
         }
 
-        static void PrintAllProjectsAndProjectTasks(Dictionary<Project, List<ProjectTask>> mainDict)
+        static void PrintProjectsHelper(Dictionary<Project, List<ProjectTask>> mainDict)
         {
-            Console.WriteLine("\n\n");
-            Console.WriteLine("Odabrali ste opciju ispisa svih projekata s pripadajucim zadacima");
-            Console.WriteLine("\n");
-
             foreach (var keyValuePair in mainDict)
             {
                 Console.WriteLine($"\n\nProjekt {keyValuePair.Key.Name}: \nOpis: {keyValuePair.Key.Description}\nPocetni datum: {keyValuePair.Key.StartDate}\n");
@@ -228,6 +224,15 @@ namespace Project_manager_app
                     Console.WriteLine($" - {projectTask.Name}");
                 }
             }
+        }
+
+        static void PrintAllProjectsAndProjectTasks(Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+            Console.WriteLine("\n\n");
+            Console.WriteLine("Odabrali ste opciju ispisa svih projekata s pripadajucim zadacima");
+            Console.WriteLine("\n");
+
+            PrintProjectsHelper(mainDict);
 
             Console.WriteLine("Pritisnite bilo koju tipku za povratak na glavni izbornik...");
             Console.ReadKey();
