@@ -163,7 +163,34 @@ namespace Project_manager_app
 
             }
         }
+        static ProjectTask ChooseProjectTask(Project project)
+        {
+            var input = "";
+            while (true)
+            {
+                do
+                {
+                    Console.Write("Unesite željeni zadatak: ");
+                    input = Console.ReadLine().ToLower().Trim();
+                } while (String.IsNullOrEmpty(input));
 
+                var exists = false;
+                foreach (var task in project.Tasks)
+                {
+                    if (task.Name.ToLower().Trim() == input)
+                    {
+                        exists = true;
+                        return task;
+                    }
+                }
+
+                if (!exists)
+                {
+                    Console.WriteLine("Uneseni zadatak ne postoji\n");
+                }
+
+            }
+        }
         static bool UserYesOrNo()
         {
             var input = "";
@@ -239,6 +266,38 @@ namespace Project_manager_app
             }
         }
 
+        static string TaskNameInputByUser(Project project)
+        {
+            var input = "";
+
+            while (true)
+            {
+                do
+                {
+                    Console.Write("Unesite željeni naziv: ");
+                    input = Console.ReadLine().ToLower().Trim();
+                } while (String.IsNullOrEmpty(input));
+
+                var exists = false;
+                foreach (var item in project.Tasks)
+                {
+                    if (item.Name.ToLower() == input)
+                    {
+                        Console.WriteLine("Uneseno ime zadatka već postoji, probajte opet");
+                        exists = true;
+                        break;
+                    }
+                }
+
+                if (!exists)
+                {
+                    Console.WriteLine("Uspjesno ste unili ime!");
+                    return input;
+                }
+
+            }
+        }
+
         static void PrintProjectsHelper(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             foreach (var keyValuePair in mainDict)
@@ -270,7 +329,7 @@ namespace Project_manager_app
             var validDate = false;
             while (!validDate)
             {
-                Console.WriteLine("Unesite datum pocetka projekta (YYYY-MM-DD): ");
+                Console.WriteLine("Unesite datum (YYYY-MM-DD): ");
                 var dateInput = Console.ReadLine();
 
                 validDate = DateTime.TryParseExact(dateInput, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
@@ -391,6 +450,66 @@ namespace Project_manager_app
 
         }
 
+        static void AddTaskToProject(Project project)
+        {
+            Console.WriteLine("Odabrali ste opciju za dodavanje novog zadatka projektu\n\n");
+
+            //Name input
+            var name = TaskNameInputByUser(project);
+            Console.WriteLine("Unesite datum roka: ");
+
+            //Duedate input
+            var dueDate = UserInputDate();
+
+            //description input
+            var description = "";
+            do
+            {
+                Console.Write("Unesite željeni opis: ");
+                description = Console.ReadLine().Trim();
+            } while (String.IsNullOrEmpty(description));
+
+            //expected duration input
+            var expDuration = int.MinValue;
+            var parseSuccess = false;
+            do
+            {
+                Console.WriteLine("Unesite ocekivano vrijeme trajanja u minutama: ");
+                parseSuccess = int.TryParse(Console.ReadLine(), out expDuration);
+            } while (!parseSuccess);
+
+            var newTask = new ProjectTask(name, description, dueDate, project, expDuration);
+
+            Console.Write("Jeste sigurni da zelite dodati novi zadatak (d/n): ");
+            var confirm = UserYesOrNo();
+            if (confirm)
+            {
+                project.Tasks.Add(newTask);
+                Console.WriteLine($"\n\nUspjesno dodan zadatak {newTask.Name}...");
+            }
+            else
+                Console.WriteLine("Otkazano dodavanje novog zadatka...");
+            Console.ReadKey();
+        }
+
+        static void RemoveTaskFromProject(Project project)
+        {
+            Console.WriteLine("Odabrali ste opciju za brisanje zadatka\n\n");
+
+            var toBeRemoved = ChooseProjectTask(project);
+
+            Console.WriteLine($"Jeste sigurni da zelite izbrisati zadatak {toBeRemoved.Name}");
+            if (UserYesOrNo())
+            {
+                project.Tasks.Remove(toBeRemoved);
+                Console.WriteLine("Zadatak izbrisan...");
+            }
+            else
+                Console.WriteLine("Otkazano brisanje....");
+            Console.ReadKey();
+
+        }
+
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
@@ -430,8 +549,10 @@ namespace Project_manager_app
                         UpdateProjectStatus(currentProject);
                         break;
                     case "4":
+                        AddTaskToProject(currentProject);
                         break;
                     case "5":
+                        RemoveTaskFromProject(currentProject);
                         break;
                     case "6":
                         break;
