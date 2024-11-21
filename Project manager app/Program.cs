@@ -28,7 +28,7 @@ namespace Project_manager_app
                 Console.WriteLine("5. Prikaz  projekata filtriranih po status (samo aktivni, ili samo završeni, ili samo na čekanju)");
                 Console.WriteLine("6. Upravljanje pojedinim projektom");
                 Console.WriteLine("7. Upravljanje pojedinim zadatkom0");
-                Console.WriteLine("\nPritisnite q za kraj rada");
+                Console.Write("\nPritisnite q za kraj rada\nOdabir: ");
 
                  input = Console.ReadLine()?.ToLower().Trim();
 
@@ -308,11 +308,24 @@ namespace Project_manager_app
             Console.ReadKey();
         }
 
+        static void PrintAllTasksFromProject(Project currentProject)
+        {
+            Console.WriteLine($"\n\nOdabrali ste opciju ispisa svih zadataka unutar projekta\nSlijedi ispis svih zadataka iz projekta {currentProject.Name}: \n");
+
+            foreach (var task in currentProject.Tasks)
+            {
+                Console.WriteLine($"Zadatak: {task.Name}\n" +
+                    $"- Opis: {task.Description} - Rok: {task.DueDate} - Status: {task.Status} - Ocekivano trajanje: {task.ExpectedDuration}");
+            }
+
+            Console.WriteLine("\n\nGotov ispis, pritisnite bilo koju tipku za povratak na prethodni izbornik...");
+            Console.ReadKey();
+
+        }
+
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
-
-            var currentProject = ChooseProject(mainDict);
 
             
             var input = "";
@@ -321,7 +334,11 @@ namespace Project_manager_app
             {
                 Console.Clear();
 
-                Console.WriteLine("Moguce opcije za rad na pojednim projektu: \n");
+                var currentProject = ChooseProject(mainDict);
+
+                Console.Clear();
+
+                Console.WriteLine($"Odabrani projekt: {currentProject.Name}\n\nMoguce opcije za rad na pojednim projektu: \n");
                 Console.WriteLine("1. Ispis svih zadataka unutar odabranog projekta");
                 Console.WriteLine("2. Prikaz detalja odabranog projekta");
                 Console.WriteLine("3. Uređivanje statusa projekta");
@@ -329,13 +346,14 @@ namespace Project_manager_app
                 Console.WriteLine("5. Brisanje zadatka iz projekta");
                 Console.WriteLine("6. Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu");
                 Console.WriteLine("\nUnesite q za povratak na pocetni izbornik" +
-                    "\nvas odabir: ");
+                    "\n\nvas odabir: ");
 
                 input = Console.ReadLine().Trim().ToLower();
 
                 switch(input)
                 {
                     case "1":
+                        PrintAllTasksFromProject(currentProject);
                         break;
                     case "2":
                         break;
