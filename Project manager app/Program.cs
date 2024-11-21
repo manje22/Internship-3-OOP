@@ -30,9 +30,9 @@ namespace Project_manager_app
                 Console.WriteLine("7. Upravljanje pojedinim zadatkom0");
                 Console.Write("\nPritisnite q za kraj rada\nOdabir: ");
 
-                 input = Console.ReadLine()?.ToLower().Trim();
+                input = Console.ReadLine()?.ToLower().Trim();
 
-                switch(input)
+                switch (input)
                 {
                     case "1":
                         PrintAllProjectsAndProjectTasks(mainDict);
@@ -60,7 +60,7 @@ namespace Project_manager_app
                         break;
                 }
             } while (input != "q");
-            
+
         }
 
         static void PrintTasksDueIn7Days(Dictionary<Project, List<ProjectTask>> mainDict)
@@ -68,9 +68,9 @@ namespace Project_manager_app
             Console.WriteLine("Odabrali ste opciju ispisa svih zadataka s rokom u sljedećih 7 dana\n\n");
             Console.WriteLine("Tasks: ");
 
-            foreach(var taskList in mainDict.Values)
+            foreach (var taskList in mainDict.Values)
             {
-                foreach(var task in taskList)
+                foreach (var task in taskList)
                 {
                     TimeSpan difference = task.DueDate - DateTime.Today;
                     if (difference.Days <= 7 && difference.Days >= 0)
@@ -100,7 +100,7 @@ namespace Project_manager_app
                     input = Console.ReadLine().Trim();
                 } while (string.IsNullOrEmpty(input));
 
-                switch(input)
+                switch (input)
                 {
                     case "1":
                         status = Status.Active;
@@ -124,7 +124,7 @@ namespace Project_manager_app
             foreach (var kvp in mainDict)
             {
                 var key = kvp.Key;
-                if(key.Status == status)
+                if (key.Status == status)
                     Console.WriteLine($"Projekt: {key.Name}\n" +
                         $"- opis{key.Description} - pocetni datum: {key.StartDate}");
             }
@@ -133,9 +133,9 @@ namespace Project_manager_app
             Console.ReadKey();
         }
 
-        static Project ChooseProject (Dictionary<Project, List<ProjectTask>> mainDict)
+        static Project ChooseProject(Dictionary<Project, List<ProjectTask>> mainDict)
         {
-            
+
             var input = "";
             while (true)
             {
@@ -204,14 +204,14 @@ namespace Project_manager_app
                 {
                     return true;
                 }
-                else if(input == "n")
+                else if (input == "n")
                 {
                     return false;
                 }
                 else
                     Console.WriteLine("Unesite ili d ili n: ");
             }
-            
+
         }
 
         static void DeleteProject(Dictionary<Project, List<ProjectTask>> mainDict)
@@ -261,7 +261,7 @@ namespace Project_manager_app
                     Console.WriteLine("Uspjesno ste unili ime!");
                     return input;
                 }
-                    
+
             }
         }
 
@@ -399,7 +399,7 @@ namespace Project_manager_app
             Console.WriteLine("Odabrali ste opciju za promjenu statusa projekta\n\n");
 
             var input = "";
-            
+
             while (true)
             {
                 Console.Clear();
@@ -513,7 +513,7 @@ namespace Project_manager_app
         {
             var total = 0;
 
-            foreach(var task in project.Tasks)
+            foreach (var task in project.Tasks)
             {
                 total += task.ExpectedDuration;
             }
@@ -527,7 +527,7 @@ namespace Project_manager_app
         {
             Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
 
-            
+
             var input = "";
 
             do
@@ -551,7 +551,7 @@ namespace Project_manager_app
 
                 input = Console.ReadLine().Trim().ToLower();
 
-                switch(input)
+                switch (input)
                 {
                     case "1":
                         PrintAllTasksFromProject(currentProject);
@@ -578,7 +578,7 @@ namespace Project_manager_app
 
             } while (String.IsNullOrEmpty(input) || input == "q");
 
-            
+
         }
 
         static void ProjectTaskDetails(ProjectTask projectTask)
@@ -589,6 +589,62 @@ namespace Project_manager_app
                 $"Projekt kojem pripada: {projectTask.ParentProject.Name}\n\nGotov ispis...");
             Console.ReadKey();
         }
+
+        static void UpdateProjectTaskStatus(ProjectTask projectTask)
+        {
+            Console.WriteLine("Odabrali ste opciju za promjenu statusa zadatka\n\n");
+
+            var input = "";
+
+            while (true)
+            {
+                Console.Clear();
+
+                Console.WriteLine("Opcije za status: \n" +
+                    "1. Active\n" +
+                    "2. Postponed\n" +
+                    "3. Finished\n");
+
+                Console.WriteLine($"Trenutni status zadatka {projectTask.Name}: {projectTask.Status}\n");
+                do
+                {
+                    Console.WriteLine("Unesite željeni status prema rednom broju: ");
+                    input = Console.ReadLine().Trim();
+                } while (string.IsNullOrEmpty(input));
+
+                Console.Write("Jeste sigurni da zelite azurirati status? (d/n): ");
+                if (!UserYesOrNo())
+                {
+                    Console.WriteLine("Otkazano azuriranje, pritisnite bilo koju tipku za nastavak....");
+                    Console.ReadKey();
+                    return;
+                }
+
+                switch (input)
+                {
+                    case "1":
+                        projectTask.SetStatusActive();
+                        Console.WriteLine("Status je sada aktivan, pritisnite bilo koju tipku za izlaz...");
+                        Console.ReadKey();
+                        return;
+                    case "2":
+                        projectTask.SetStatusPostponed();
+                        Console.WriteLine("Status je sada na cekanju, pritisnite bilo koju tipku za izlaz...");
+                        Console.ReadKey();
+                        return;
+                    case "3":
+                        projectTask.SetStatusFinished();
+                        Console.WriteLine("Status je sada gotov, pritisnite bilo koju tipku za izlaz...");
+                        Console.ReadKey();
+                        return;
+                    default:
+                        Console.WriteLine("Unesa opcija ne postoji probajte opet: \n");
+                        break;
+                }
+            }
+
+        }
+    
 
         static void ProjectTaskMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
@@ -616,13 +672,13 @@ namespace Project_manager_app
 
                 input = Console.ReadLine().Trim().ToLower();
 
-                switch(input)
+                switch (input)
                 {
                     case "1":
                         ProjectTaskDetails(currentTask);
                         break;
                     case "2":
-                        Console.WriteLine("2");
+                        UpdateProjectTaskStatus(currentTask);
                         break;
                     case "q":
                         Console.WriteLine("Izlaz iz izbornika...");
@@ -684,7 +740,7 @@ namespace Project_manager_app
             project5.Tasks.Add(task5_2);
             project5.Tasks.Add(task5_3);
 
-            
+
 
             //Adding to dictionary
             mainDictionary.Add(project1, project1.Tasks);
@@ -694,7 +750,7 @@ namespace Project_manager_app
             mainDictionary.Add(project5, project5.Tasks);
 
             //Setting status of some projects
-            
+
             project2.SetStatusToActive();
             project3.SetStatusToActive();
             project5.SetStatusToAFinished();
@@ -705,8 +761,8 @@ namespace Project_manager_app
             project5.EndDate = new DateTime(2023, 02, 25);
 
             MainMenu(mainDictionary);
-
-           
         }
+
     }
+
 }
