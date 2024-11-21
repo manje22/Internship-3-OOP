@@ -50,6 +50,7 @@ namespace Project_manager_app
                         PrintProjectsFiltered(mainDict);
                         break;
                     case "6":
+                        ProjectMenu(mainDict);
                         break;
                     case "7":
                         break;
@@ -307,14 +308,50 @@ namespace Project_manager_app
             Console.ReadKey();
         }
 
-        static void ProjectMenu()
+        static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
-            Console.WriteLine("1. Ispis svih zadataka unutar odabranog projekta");
-            Console.WriteLine("2. Prikaz detalja odabranog projekta");
-            Console.WriteLine("3. Uređivanje statusa projekta");
-            Console.WriteLine("4. Dodavanje zadatka unutar projekta");
-            Console.WriteLine("5. Brisanje zadatka iz projekta");
-            Console.WriteLine("6. Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu");
+            Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
+
+            var currentProject = ChooseProject(mainDict);
+
+            
+            var input = "";
+
+            do
+            {
+                Console.Clear();
+
+                Console.WriteLine("Moguce opcije za rad na pojednim projektu: \n");
+                Console.WriteLine("1. Ispis svih zadataka unutar odabranog projekta");
+                Console.WriteLine("2. Prikaz detalja odabranog projekta");
+                Console.WriteLine("3. Uređivanje statusa projekta");
+                Console.WriteLine("4. Dodavanje zadatka unutar projekta");
+                Console.WriteLine("5. Brisanje zadatka iz projekta");
+                Console.WriteLine("6. Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu");
+                Console.WriteLine("\nUnesite q za povratak na pocetni izbornik" +
+                    "\nvas odabir: ");
+
+                input = Console.ReadLine().Trim().ToLower();
+
+                switch(input)
+                {
+                    case "1":
+                        break;
+                    case "2":
+                        break;
+                    case "3":
+                        break;
+                    case "4":
+                        break;
+                    case "5":
+                        break;
+                    case "6":
+                        break;
+                }
+
+            } while (String.IsNullOrEmpty(input) || input == "q");
+
+            
         }
 
         static void ProjectTaskMenu()
