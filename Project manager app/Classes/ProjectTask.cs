@@ -12,7 +12,7 @@ namespace Project_manager_app.Classes
         public string Name { get; set; }
         public string Description { get; set; }
         public DateTime DueDate { get; set; }
-        public Status Status { get; set; }
+        public ProjectTaskStatus Status { get; set; }
         public int ExpectedDuration { get; set; }
         public Project ParentProject { get; set; }
 
@@ -23,7 +23,22 @@ namespace Project_manager_app.Classes
             DueDate = dueDate;
             ParentProject = parentProject;
             ExpectedDuration = expD;
-            Status = Status.Waiting;
+            Status = ProjectTaskStatus.Postponed;
+        }
+
+        public void SetStatusActive()
+        {
+            Status = ProjectTaskStatus.Active;
+        }
+
+        public void SetStatusFinished()
+        {
+            Status = ProjectTaskStatus.Finished;
+        }
+
+        public void SetStatusPostponed()
+        {
+            Status = ProjectTaskStatus.Postponed;
         }
     }
 }
