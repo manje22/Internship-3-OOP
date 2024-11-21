@@ -323,6 +323,19 @@ namespace Project_manager_app
 
         }
 
+        static void ShowProjectDetails(Project currentProject)
+        {
+            var endDateRes = currentProject.Status == Status.Finished ? currentProject.EndDate.Date.ToString() : "Projekt nije gotov";
+
+            Console.WriteLine($"\n\nOdabrali ste opciju prikaza svih detalja odabranog projekta\n\nDetalji - {currentProject.Name}\n" +
+                $"Opis: {currentProject.Description}\n" +
+                $"Pocetak: {currentProject.StartDate.Date}\n" +
+                $"Kraj: {endDateRes}\n" +
+                $"Status: {currentProject.Status}\n");
+            Console.WriteLine("\nGotov ispis, pritisnite bilo koju tipku za izlaz...");
+            Console.ReadKey();
+        }
+
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
@@ -356,6 +369,7 @@ namespace Project_manager_app
                         PrintAllTasksFromProject(currentProject);
                         break;
                     case "2":
+                        ShowProjectDetails(currentProject);
                         break;
                     case "3":
                         break;
@@ -441,6 +455,10 @@ namespace Project_manager_app
             project3.SetStatusToActive();
             project5.SetStatusToAFinished();
             project4.SetStatusToAFinished();
+
+            //adding end dates to some projects
+            project4.EndDate = new DateTime(2023, 02, 03);
+            project5.EndDate = new DateTime(2023, 02, 25);
 
             MainMenu(mainDictionary);
 
