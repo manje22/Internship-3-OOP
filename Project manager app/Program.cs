@@ -336,6 +336,61 @@ namespace Project_manager_app
             Console.ReadKey();
         }
 
+        static void UpdateProjectStatus(Project currentProject)
+        {
+            Console.WriteLine("Odabrali ste opciju za promjenu statusa projekta\n\n");
+
+            var input = "";
+            
+            while (true)
+            {
+                Console.Clear();
+
+                Console.WriteLine("Opcije za status: \n" +
+                    "1. Active\n" +
+                    "2. Waiting\n" +
+                    "3. Finished\n");
+
+                Console.WriteLine($"Trenutni status projekta {currentProject.Name}: {currentProject.Status}\n");
+                do
+                {
+                    Console.WriteLine("Unesite željeni status prema rednom broju: ");
+                    input = Console.ReadLine().Trim();
+                } while (string.IsNullOrEmpty(input));
+
+                Console.Write("Jeste sigurni da zelite azurirati status? (d/n): ");
+                if (!UserYesOrNo())
+                {
+                    Console.WriteLine("Otkazano azuriranje, pritisnite bilo koju tipku za nastavak....");
+                    Console.ReadKey();
+                    return;
+                }
+
+                switch (input)
+                {
+                    case "1":
+                        currentProject.SetStatusToActive();
+                        Console.WriteLine("Status je sada aktivan, pritisnite bilo koju tipku za izlaz...");
+                        Console.ReadKey();
+                        return;
+                    case "2":
+                        currentProject.SetStatusToWaiting();
+                        Console.WriteLine("Status je sada na cekanju, pritisnite bilo koju tipku za izlaz...");
+                        Console.ReadKey();
+                        return;
+                    case "3":
+                        currentProject.SetStatusToAFinished();
+                        Console.WriteLine("Status je sada gotov, pritisnite bilo koju tipku za izlaz...");
+                        Console.ReadKey();
+                        return;
+                    default:
+                        Console.WriteLine("Unesa opcija ne postoji probajte opet: \n");
+                        break;
+                }
+            }
+
+        }
+
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
@@ -372,6 +427,7 @@ namespace Project_manager_app
                         ShowProjectDetails(currentProject);
                         break;
                     case "3":
+                        UpdateProjectStatus(currentProject);
                         break;
                     case "4":
                         break;
