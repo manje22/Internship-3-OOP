@@ -510,6 +510,20 @@ namespace Project_manager_app
 
         }
 
+        static void TotalExpectedDuration(Project project)
+        {
+            var total = 0;
+
+            foreach(var task in project.Tasks)
+            {
+                total += task.ExpectedDuration;
+            }
+
+            Console.WriteLine($"Ocekivano vrijeme trajanja: {total}\n\n");
+
+            Console.WriteLine("Pritisnite bilo koju tipku za izlaz...");
+            Console.ReadKey();
+        }
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
@@ -555,6 +569,7 @@ namespace Project_manager_app
                         RemoveTaskFromProject(currentProject);
                         break;
                     case "6":
+                        TotalExpectedDuration(currentProject);
                         break;
                 }
 
