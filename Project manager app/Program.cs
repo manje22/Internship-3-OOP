@@ -107,6 +107,9 @@ namespace Project_manager_app
                     Console.WriteLine($"Projekt: {key.Name}\n" +
                         $"- opis{key.Description} - pocetni datum: {key.StartDate}");
             }
+
+            Console.WriteLine("Gotov ispis projekta, pritisnite bilo koju tipku za povratak...");
+            Console.ReadKey();
         }
 
         static Project ChooseProject (Dictionary<Project, List<ProjectTask>> mainDict)
@@ -353,6 +356,13 @@ namespace Project_manager_app
             mainDictionary.Add(project3, project3.Tasks);
             mainDictionary.Add(project4, project4.Tasks);
             mainDictionary.Add(project5, project5.Tasks);
+
+            //Setting status of some projects
+            
+            project2.SetStatusToActive();
+            project3.SetStatusToActive();
+            project5.SetStatusToAFinished();
+            project4.SetStatusToAFinished();
 
             MainMenu(mainDictionary);
         }
