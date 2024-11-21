@@ -53,8 +53,7 @@ namespace Project_manager_app
                         ProjectMenu(mainDict);
                         break;
                     case "7":
-                        break;
-                    case "q":
+                        ProjectTaskMenu(mainDict);
                         break;
                     default:
                         Console.WriteLine("Neispravan unos pokusajte opet");
@@ -536,10 +535,11 @@ namespace Project_manager_app
                 Console.Clear();
 
                 var currentProject = ChooseProject(mainDict);
+                var currentTask = ChooseProjectTask(currentProject);
 
                 Console.Clear();
 
-                Console.WriteLine($"Odabrani projekt: {currentProject.Name}\n\nMoguce opcije za rad na pojednim projektu: \n");
+                Console.WriteLine($"Odabrani projekt: {currentProject.Name}\n\nMoguce opcije za rad na pojedinom projektu: \n");
                 Console.WriteLine("1. Ispis svih zadataka unutar odabranog projekta");
                 Console.WriteLine("2. Prikaz detalja odabranog projekta");
                 Console.WriteLine("3. Uređivanje statusa projekta");
@@ -571,6 +571,9 @@ namespace Project_manager_app
                     case "6":
                         TotalExpectedDuration(currentProject);
                         break;
+                    case "q":
+                        Console.WriteLine("Izlaz");
+                        break;
                 }
 
             } while (String.IsNullOrEmpty(input) || input == "q");
@@ -578,10 +581,59 @@ namespace Project_manager_app
             
         }
 
-        static void ProjectTaskMenu()
+        static void ProjectTaskDetails(ProjectTask projectTask)
         {
-            Console.WriteLine("1. Prikaz detalja odabranog zadatka");
-            Console.WriteLine("2. Uređivanje statusa zadatka");
+            Console.WriteLine("Odabrali ste opciju za prikaz detalja zadatka\n\n");
+            Console.WriteLine($"Naziv: {projectTask.Name}\n" + $"Opis: {projectTask.Description}\n" + $"Rok: {projectTask.DueDate}\n"
+                + $"Status: {projectTask.Status}\n" +
+                $"Projekt kojem pripada: {projectTask.ParentProject.Name}\n\nGotov ispis...");
+            Console.ReadKey();
+        }
+
+        static void ProjectTaskMenu(Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+
+            Console.WriteLine("Odabrali ste opciju za rad na pojedinom zadatku\n\n");
+
+            var input = "";
+
+            do
+            {
+                Console.Clear();
+
+                var currentProject = ChooseProject(mainDict);
+                var currentTask = ChooseProjectTask(currentProject);
+
+                Console.Clear();
+
+                Console.WriteLine($"Odabrani projekt i zadatak: {currentProject.Name} - {currentTask.Name}\n\nMoguce opcije za rad na pojedinom zadatku: \n");
+
+                Console.WriteLine("1. Prikaz detalja odabranog zadatka");
+                Console.WriteLine("2. Uređivanje statusa zadatka");
+
+                Console.WriteLine("\nUnesite q za povratak na pocetni izbornik" +
+                    "\n\nvas odabir: ");
+
+                input = Console.ReadLine().Trim().ToLower();
+
+                switch(input)
+                {
+                    case "1":
+                        ProjectTaskDetails(currentTask);
+                        break;
+                    case "2":
+                        Console.WriteLine("2");
+                        break;
+                    case "q":
+                        Console.WriteLine("Izlaz iz izbornika...");
+                        break;
+                    default:
+                        Console.WriteLine("Ne valjan unos, probajte opet");
+                        break;
+                }
+            } while (input != "q");
+
+            Console.ReadKey();
         }
 
         static void Main(string[] args)
