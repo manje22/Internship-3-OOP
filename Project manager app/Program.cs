@@ -44,6 +44,7 @@ namespace Project_manager_app
                         DeleteProject(mainDict);
                         break;
                     case "4":
+                        PrintTasksDueIn7Days(mainDict);
                         break;
                     case "5":
                         PrintProjectsFiltered(mainDict);
@@ -62,7 +63,27 @@ namespace Project_manager_app
             
         }
 
+        static void PrintTasksDueIn7Days(Dictionary<Project, List<ProjectTask>> mainDict)
+        {
+            Console.WriteLine("Odabrali ste opciju ispisa svih zadataka s rokom u sljedećih 7 dana\n\n");
+            Console.WriteLine("Tasks: ");
 
+            foreach(var taskList in mainDict.Values)
+            {
+                foreach(var task in taskList)
+                {
+                    TimeSpan difference = task.DueDate - DateTime.Today;
+                    if (difference.Days <= 7 && difference.Days >= 0)
+                    {
+                        Console.WriteLine($"- {task.Name} - {task.Description} - {task.DueDate}");
+                    }
+                }
+
+            }
+
+            Console.WriteLine("\nGotov ispis zadataka, pritisnite bilo koju tipku za zavrsetak...");
+            Console.ReadKey();
+        }
         static void PrintProjectsFiltered(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             var input = "";
@@ -310,7 +331,7 @@ namespace Project_manager_app
             var project1 = new Project("PrviProjekt", "Ovo je prvi projekt", new DateTime(2024, 05, 01));
             var task1_1 = new ProjectTask("1.1.", "Prvi zadatak prvog projekta", new DateTime(2024, 06, 01), project1, 150);
             var task1_2 = new ProjectTask("1.2.", "Drugi zadatak prvog projekta", new DateTime(2024, 05, 023), project1, 100);
-            var task1_3 = new ProjectTask("1.3.", "Treci zadatak prvog projekta", new DateTime(2024, 11, 05), project1, 2000);
+            var task1_3 = new ProjectTask("1.3.", "Treci zadatak prvog projekta", new DateTime(2024, 11, 24), project1, 2000);
             project1.Tasks.Add(task1_1);
             project1.Tasks.Add(task1_2);
             project1.Tasks.Add(task1_3);
@@ -319,9 +340,11 @@ namespace Project_manager_app
             var task2_1 = new ProjectTask("2.1.", "Prvi zadatak drugog projekta", new DateTime(2023, 12, 24), project2, 200);
             var task2_2 = new ProjectTask("2.2.", "Drugi zadatak drugog projekta", new DateTime(2024, 04, 12), project2, 1000);
             var task2_3 = new ProjectTask("2.3.", "Treci zadatak drugog projekta", new DateTime(2023, 11, 10), project2, 95);
+            var task2_4 = new ProjectTask("2.4.", "Cetvrti zadatak drugog projekta", new DateTime(2024, 11, 27), project2, 95);
             project2.Tasks.Add(task2_1);
             project2.Tasks.Add(task2_2);
             project2.Tasks.Add(task2_3);
+            project2.Tasks.Add(task2_4);
 
             var project3 = new Project("TreciProjekt", "Ovo je treci projekt", new DateTime(2023, 11, 20));
             var task3_1 = new ProjectTask("3.1.", "Prvi zadatak treceg projekta", new DateTime(2023, 12, 04), project3, 120);
@@ -365,6 +388,8 @@ namespace Project_manager_app
             project4.SetStatusToAFinished();
 
             MainMenu(mainDictionary);
+
+           
         }
     }
 }
