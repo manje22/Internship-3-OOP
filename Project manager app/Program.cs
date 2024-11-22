@@ -532,6 +532,20 @@ namespace Project_manager_app
             Console.WriteLine("Pritisnite bilo koju tipku za izlaz...");
             Console.ReadKey();
         }
+
+        static void PrintTasksSortedByDuration(Project project)
+        {
+            project.Tasks.Sort((a,b) =>  a.ExpectedDuration.CompareTo(b.ExpectedDuration));
+            Console.WriteLine($"\n\nIspis zadataka prema trajanju:\n");
+            foreach (var task in project.Tasks)
+            {
+                Console.WriteLine($"Zadatak: {task.Name}\n" +
+                    $"- Opis: {task.Description} - Rok: {task.DueDate.ToShortDateString()} - Status: {task.Status} - Ocekivano trajanje: {task.ExpectedDuration}\n");
+            }
+
+            Console.ReadKey();
+        }
+
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
 
@@ -577,6 +591,7 @@ namespace Project_manager_app
                 Console.WriteLine("4. Dodavanje zadatka unutar projekta");
                 Console.WriteLine("5. Brisanje zadatka iz projekta");
                 Console.WriteLine("6. Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu");
+                Console.WriteLine("7. Ispis zadataka sortirano prema trajanju");
                 Console.WriteLine("\nUnesite q za povratak na pocetni izbornik" +
                     "\n\nvas odabir: ");
 
@@ -619,6 +634,9 @@ namespace Project_manager_app
                         break;
                     case "6":
                         TotalExpectedDuration(currentProject);
+                        break;
+                    case "7":
+                        PrintTasksSortedByDuration(currentProject);
                         break;
                     case "q":
                         Console.WriteLine("Izlaz");
