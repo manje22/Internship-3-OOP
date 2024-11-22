@@ -347,8 +347,7 @@ namespace Project_manager_app
         static void AddNewProjectUser(Dictionary<Project, List<ProjectTask>> mainDict)
         {
             Console.WriteLine("Odabrali ste opciju unos novog projekta\n");
-            //f-ja za unos imena (postoji li)
-            //f-ja za unos valjanog datuma
+            
 
             var newName = NameInputByUser(mainDict);
             var description = "";
