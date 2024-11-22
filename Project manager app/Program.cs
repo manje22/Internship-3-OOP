@@ -546,6 +546,19 @@ namespace Project_manager_app
             Console.ReadKey();
         }
 
+        static void PrintTasksSortedByPriority(Project currentProject)
+        {
+            currentProject.Tasks.Sort((a, b) => a.Priority.CompareTo(b.Priority));
+            Console.WriteLine($"\n\nIspis zadataka prema prioritetu:\n");
+            foreach (var task in currentProject.Tasks)
+            {
+                Console.WriteLine($"Zadatak: {task.Name}\n" +
+                    $"- Opis: {task.Description} - Rok: {task.DueDate.ToShortDateString()} - Status: {task.Status} - Ocekivano trajanje: {task.ExpectedDuration} - Prioritet: {task.Priority}\n");
+            }
+
+            Console.ReadKey();
+        }
+
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
 
@@ -592,6 +605,7 @@ namespace Project_manager_app
                 Console.WriteLine("5. Brisanje zadatka iz projekta");
                 Console.WriteLine("6. Prikaz ukupno očekivanog vremena potrebnog za sve aktivne zadatke u projektu");
                 Console.WriteLine("7. Ispis zadataka sortirano prema trajanju");
+                Console.WriteLine("8. Ispis zadataka sortirano prema prioritetu");
                 Console.WriteLine("\nUnesite q za povratak na pocetni izbornik" +
                     "\n\nvas odabir: ");
 
@@ -637,6 +651,9 @@ namespace Project_manager_app
                         break;
                     case "7":
                         PrintTasksSortedByDuration(currentProject);
+                        break;
+                    case "8":
+                        PrintTasksSortedByPriority(currentProject);
                         break;
                     case "q":
                         Console.WriteLine("Izlaz");
@@ -805,6 +822,9 @@ namespace Project_manager_app
             project1.Tasks.Add(task1_2);
             project1.Tasks.Add(task1_3);
 
+            task1_1.SetPriorityHigh();
+            task1_2.SetPriorityLow();
+
             var project2 = new Project("DrugiProjekt", "Ovo je drugi projekt", new DateTime(2023, 11, 05));
             var task2_1 = new ProjectTask("2.1.", "Prvi zadatak drugog projekta", new DateTime(2023, 12, 24), project2, 200);
             var task2_2 = new ProjectTask("2.2.", "Drugi zadatak drugog projekta", new DateTime(2024, 04, 12), project2, 1000);
@@ -814,6 +834,10 @@ namespace Project_manager_app
             project2.Tasks.Add(task2_2);
             project2.Tasks.Add(task2_3);
             project2.Tasks.Add(task2_4);
+
+            task2_2.SetPriorityHigh();
+            task2_4.SetPriorityHigh();
+            task2_1.SetPriorityLow();
 
             var project3 = new Project("TreciProjekt", "Ovo je treci projekt", new DateTime(2023, 11, 20));
             var task3_1 = new ProjectTask("3.1.", "Prvi zadatak treceg projekta", new DateTime(2023, 12, 04), project3, 120);
