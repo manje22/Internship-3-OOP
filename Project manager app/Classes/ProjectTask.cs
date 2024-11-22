@@ -16,6 +16,8 @@ namespace Project_manager_app.Classes
         public int ExpectedDuration { get; set; }
         public Project ParentProject { get; set; }
 
+        public TaskPriority Priority { get; set; }
+
         public ProjectTask(string name, string description, DateTime dueDate, Project parentProject, int expD)
         {
             Name = name;
@@ -24,6 +26,22 @@ namespace Project_manager_app.Classes
             ParentProject = parentProject;
             ExpectedDuration = expD;
             Status = ProjectTaskStatus.Postponed;
+            Priority = TaskPriority.Mid;
+        }
+
+        public void SetPriorityHigh()
+        {
+            Priority = TaskPriority.High;
+        }
+
+        public void SetPriorityLow()
+        {
+            Priority = TaskPriority.Low;
+        }
+
+        public void SetPriorityMid()
+        {
+            Priority = TaskPriority.Mid;
         }
 
         public void SetStatusActive()
