@@ -28,7 +28,7 @@ namespace Project_manager_app
                 Console.WriteLine("4. Prikaz svih zadataka s rokom u sljedećih 7 dana");
                 Console.WriteLine("5. Prikaz  projekata filtriranih po status (samo aktivni, ili samo završeni, ili samo na čekanju)");
                 Console.WriteLine("6. Upravljanje pojedinim projektom");
-                Console.WriteLine("7. Upravljanje pojedinim zadatkom0");
+                Console.WriteLine("7. Upravljanje pojedinim zadatkom");
                 Console.Write("\nPritisnite q za kraj rada\nOdabir: ");
 
                 input = Console.ReadLine()?.ToLower().Trim();
@@ -302,7 +302,7 @@ namespace Project_manager_app
         {
             foreach (var keyValuePair in mainDict)
             {
-                Console.WriteLine($"\n\nProjekt {keyValuePair.Key.Name}: \nOpis: {keyValuePair.Key.Description}\nPocetni datum: {keyValuePair.Key.StartDate.ToShortDateString()}\n" +
+                Console.WriteLine($"\n\nProjekt {keyValuePair.Key.Name}: \nOpis: {keyValuePair.Key.Description}\nPocetni datum: {keyValuePair.Key.StartDate.ToShortDateString()}\nStatus: {keyValuePair.Key.Status}\n" +
                     $"\n- Zadaci:");
                 foreach (var projectTask in keyValuePair.Value)
                 {
@@ -584,12 +584,30 @@ namespace Project_manager_app
                         ShowProjectDetails(currentProject);
                         break;
                     case "3":
+                        if(currentProject.Status == Status.Finished)
+                        {
+                            Console.WriteLine("Odabrani projekt je gotov, uredivanje vise nije moguce...");
+                            Console.ReadKey();
+                            break;
+                        }
                         UpdateProjectStatus(currentProject);
                         break;
                     case "4":
+                        if (currentProject.Status == Status.Finished)
+                        {
+                            Console.WriteLine("Odabrani projekt je gotov, uredivanje vise nije moguce...");
+                            Console.ReadKey();
+                            break;
+                        }
                         AddTaskToProject(currentProject);
                         break;
                     case "5":
+                        if (currentProject.Status == Status.Finished)
+                        {
+                            Console.WriteLine("Odabrani projekt je gotov, uredivanje vise nije moguce...");
+                            Console.ReadKey();
+                            break;
+                        }
                         RemoveTaskFromProject(currentProject);
                         break;
                     case "6":
@@ -617,6 +635,20 @@ namespace Project_manager_app
         static void UpdateProjectTaskStatus(ProjectTask projectTask)
         {
             Console.WriteLine("Odabrali ste opciju za promjenu statusa zadatka\n\n");
+
+            if(projectTask.ParentProject.Status == Status.Finished)
+            {
+                Console.WriteLine("Roditeljski projekt je gotov, uredivanje vise nije dostupno...");
+                Console.ReadKey();
+                return;
+            }
+
+            if (projectTask.Status == ProjectTaskStatus.Finished)
+            {
+                Console.WriteLine("Zadatak je gotov, uredivanje vise nije dostupno...");
+                Console.ReadKey();
+                return;
+            }
 
             var input = "";
 
@@ -673,7 +705,8 @@ namespace Project_manager_app
         static void ProjectTaskMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
 
-            Console.WriteLine("Odabrali ste opciju za rad na pojedinom zadatku\n\n");
+            Project currentProject = null;
+            ProjectTask currentTask = null;
 
             var input = "";
 
@@ -681,12 +714,24 @@ namespace Project_manager_app
             {
                 Console.Clear();
 
-                var currentProject = ChooseProject(mainDict);
-                var currentTask = ChooseProjectTask(currentProject);
+                Console.WriteLine("Odabrali ste opciju za rad na pojedinom zadatku\n\n");
+
+                if (currentTask is null)
+                {
+                    currentProject = ChooseProject(mainDict);
+                    currentTask = ChooseProjectTask(currentProject);
+                }
+               
+                var isFinished = currentTask.Status== ProjectTaskStatus.Finished ? true: false;
 
                 Console.Clear();
 
+                if (currentProject.Status == Status.Finished)
+                    Console.WriteLine("Napomena - Ovaj projekt je gotov, uredivanje njegovih zadatka nije vise moguce\n\n");
                 Console.WriteLine($"Odabrani projekt i zadatak: {currentProject.Name} - {currentTask.Name}\n\nMoguce opcije za rad na pojedinom zadatku: \n");
+
+                if(isFinished)
+                    Console.WriteLine("Oprez! Vas zadatak je zavrsen - uredivanje ovog zadatka vise nije dostupno");
 
                 Console.WriteLine("1. Prikaz detalja odabranog zadatka");
                 Console.WriteLine("2. Uređivanje statusa zadatka");
@@ -702,6 +747,11 @@ namespace Project_manager_app
                         ProjectTaskDetails(currentTask);
                         break;
                     case "2":
+                        if(isFinished)
+                        {
+                            Console.WriteLine("Gotov zadatak - uredivanje nedostupno...");
+                            break;
+                        }
                         UpdateProjectTaskStatus(currentTask);
                         break;
                     case "q":
@@ -758,8 +808,11 @@ namespace Project_manager_app
 
             var project5 = new Project("PetiProjekt", "Ovo je peti projekt", new DateTime(2022, 10, 3));
             var task5_1 = new ProjectTask("5.1.", "Prvi zadatak petog projekta", new DateTime(2022, 11, 04), project5, 134);
+            task5_1.SetStatusFinished();
             var task5_2 = new ProjectTask("5.2.", "Drugi zadatak petog projekta", new DateTime(2022, 11, 26), project5, 202);
+            task5_2.SetStatusFinished();
             var task5_3 = new ProjectTask("5.3.", "Treci zadatak petog projekta", new DateTime(2023, 02, 23), project5, 967);
+            task5_3.SetStatusFinished();
             project5.Tasks.Add(task5_1);
             project5.Tasks.Add(task5_2);
             project5.Tasks.Add(task5_3);

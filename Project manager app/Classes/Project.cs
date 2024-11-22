@@ -13,7 +13,18 @@ namespace Project_manager_app.Classes
         public string Description { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
-        public Status Status { get; set; }
+
+        private Status _status = Status.Waiting;
+        public Status Status
+        {
+            get
+            {
+                if (Tasks.All(task => task.Status == ProjectTaskStatus.Finished))
+                    return Status.Finished;
+                return _status;
+            }
+        }
+
 
         public List<ProjectTask> Tasks { get; set; }
 
@@ -23,23 +34,23 @@ namespace Project_manager_app.Classes
             Description = description;
             StartDate = startDate;
             EndDate = DateTime.MaxValue;
-            Status = Status.Waiting;
+            _status = Status.Waiting;
             Tasks = new List<ProjectTask>();
         }
 
         public void SetStatusToActive()
         {
-            Status = Status.Active;
+            _status = Status.Active;
         }
 
         public void SetStatusToAFinished()
         {
-            Status = Status.Finished;
+            _status = Status.Finished;
         }
 
         public void SetStatusToWaiting()
         {
-            Status = Status.Waiting;
+            _status = Status.Waiting;
         }
     }
 }
