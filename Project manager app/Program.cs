@@ -20,6 +20,7 @@ namespace Project_manager_app
             {
                 Console.Clear();
 
+                Console.WriteLine("--Glavni izbornik--");
 
                 Console.WriteLine("1. Ispis svih projekata s pripadajućim zadacima");
                 Console.WriteLine("2. Dodavanje novog projekta");
@@ -75,7 +76,7 @@ namespace Project_manager_app
                     TimeSpan difference = task.DueDate - DateTime.Today;
                     if (difference.Days <= 7 && difference.Days >= 0)
                     {
-                        Console.WriteLine($"- {task.Name} - {task.Description} - {task.DueDate}");
+                        Console.WriteLine($"- {task.Name} - {task.Description} - Roditeljski projekt: {task.ParentProject.Name} - {task.DueDate.ToShortDateString()}");
                     }
                 }
 
@@ -92,8 +93,8 @@ namespace Project_manager_app
             {
                 Console.WriteLine("Opcije za status: \n" +
                     "1. Active\n" +
-                    "2.Waiting\n" +
-                    "3.Finished\n");
+                    "2. Waiting\n" +
+                    "3. Finished\n");
                 do
                 {
                     Console.WriteLine("Unesite željeni status prema rednom broju: ");
@@ -126,7 +127,7 @@ namespace Project_manager_app
                 var key = kvp.Key;
                 if (key.Status == status)
                     Console.WriteLine($"Projekt: {key.Name}\n" +
-                        $"- opis{key.Description} - pocetni datum: {key.StartDate}");
+                        $"- opis: {key.Description} - pocetni datum: {key.StartDate.ToShortDateString()}\n");
             }
 
             Console.WriteLine("Gotov ispis projekta, pritisnite bilo koju tipku za povratak...");
@@ -141,7 +142,7 @@ namespace Project_manager_app
             {
                 do
                 {
-                    Console.Write("Unesite željeni projekt: ");
+                    Console.Write("\n\nUnesite željeni projekt: ");
                     input = Console.ReadLine().ToLower().Trim();
                 } while (String.IsNullOrEmpty(input));
 
@@ -273,7 +274,7 @@ namespace Project_manager_app
             {
                 do
                 {
-                    Console.Write("Unesite željeni naziv: ");
+                    Console.Write("\nUnesite željeni naziv: ");
                     input = Console.ReadLine().ToLower().Trim();
                 } while (String.IsNullOrEmpty(input));
 
@@ -301,7 +302,8 @@ namespace Project_manager_app
         {
             foreach (var keyValuePair in mainDict)
             {
-                Console.WriteLine($"\n\nProjekt {keyValuePair.Key.Name}: \nOpis: {keyValuePair.Key.Description}\nPocetni datum: {keyValuePair.Key.StartDate}\n");
+                Console.WriteLine($"\n\nProjekt {keyValuePair.Key.Name}: \nOpis: {keyValuePair.Key.Description}\nPocetni datum: {keyValuePair.Key.StartDate.ToShortDateString()}\n" +
+                    $"\n- Zadaci:");
                 foreach (var projectTask in keyValuePair.Value)
                 {
                     Console.WriteLine($" - {projectTask.Name}");
@@ -321,14 +323,14 @@ namespace Project_manager_app
             Console.ReadKey();
         }
 
-        static DateTime UserInputDate()
+        static DateTime UserInputDate(string description = "")
         {
             DateTime startDate = DateTime.Now;
 
             var validDate = false;
             while (!validDate)
             {
-                Console.WriteLine("Unesite datum (YYYY-MM-DD): ");
+                Console.Write($"\nUnesite datum {description} (YYYY-MM-DD): ");
                 var dateInput = Console.ReadLine();
 
                 validDate = DateTime.TryParseExact(dateInput, "yyyy-MM-dd", CultureInfo.InvariantCulture, DateTimeStyles.None, out startDate);
@@ -344,7 +346,7 @@ namespace Project_manager_app
 
         static void AddNewProjectUser(Dictionary<Project, List<ProjectTask>> mainDict)
         {
-            Console.WriteLine("Odabrali ste opciju unos novog projekta");
+            Console.WriteLine("Odabrali ste opciju unos novog projekta\n");
             //f-ja za unos imena (postoji li)
             //f-ja za unos valjanog datuma
 
@@ -352,7 +354,7 @@ namespace Project_manager_app
             var description = "";
             do
             {
-                Console.Write("Unesite željeni opis: ");
+                Console.Write("\nUnesite željeni opis: ");
                 description = Console.ReadLine().Trim();
             } while (String.IsNullOrEmpty(description));
 
@@ -368,12 +370,12 @@ namespace Project_manager_app
 
         static void PrintAllTasksFromProject(Project currentProject)
         {
-            Console.WriteLine($"\n\nOdabrali ste opciju ispisa svih zadataka unutar projekta\nSlijedi ispis svih zadataka iz projekta {currentProject.Name}: \n");
+            Console.WriteLine($"\n\nOdabrali ste opciju ispisa svih zadataka unutar projekta\n\nSlijedi ispis svih zadataka iz projekta {currentProject.Name}: \n\n");
 
             foreach (var task in currentProject.Tasks)
             {
                 Console.WriteLine($"Zadatak: {task.Name}\n" +
-                    $"- Opis: {task.Description} - Rok: {task.DueDate} - Status: {task.Status} - Ocekivano trajanje: {task.ExpectedDuration}");
+                    $"- Opis: {task.Description} - Rok: {task.DueDate.ToShortDateString()} - Status: {task.Status} - Ocekivano trajanje: {task.ExpectedDuration}\n");
             }
 
             Console.WriteLine("\n\nGotov ispis, pritisnite bilo koju tipku za povratak na prethodni izbornik...");
@@ -383,11 +385,11 @@ namespace Project_manager_app
 
         static void ShowProjectDetails(Project currentProject)
         {
-            var endDateRes = currentProject.Status == Status.Finished ? currentProject.EndDate.Date.ToString() : "Projekt nije gotov";
+            var endDateRes = currentProject.Status == Status.Finished ? currentProject.EndDate.Date.ToShortDateString() : "Projekt nije gotov";
 
             Console.WriteLine($"\n\nOdabrali ste opciju prikaza svih detalja odabranog projekta\n\nDetalji - {currentProject.Name}\n" +
                 $"Opis: {currentProject.Description}\n" +
-                $"Pocetak: {currentProject.StartDate.Date}\n" +
+                $"Pocetak: {currentProject.StartDate.Date.ToShortTimeString()}\n" +
                 $"Kraj: {endDateRes}\n" +
                 $"Status: {currentProject.Status}\n");
             Console.WriteLine("\nGotov ispis, pritisnite bilo koju tipku za izlaz...");
@@ -455,16 +457,16 @@ namespace Project_manager_app
 
             //Name input
             var name = TaskNameInputByUser(project);
-            Console.WriteLine("Unesite datum roka: ");
+            //Console.WriteLine("\nUnesite datum roka: ");
 
             //Duedate input
-            var dueDate = UserInputDate();
+            var dueDate = UserInputDate("roka");
 
             //description input
             var description = "";
             do
             {
-                Console.Write("Unesite željeni opis: ");
+                Console.Write("\nUnesite željeni opis: ");
                 description = Console.ReadLine().Trim();
             } while (String.IsNullOrEmpty(description));
 
@@ -473,9 +475,9 @@ namespace Project_manager_app
             var parseSuccess = false;
             do
             {
-                Console.WriteLine("Unesite ocekivano vrijeme trajanja u minutama: ");
+                Console.Write("\nUnesite ocekivano vrijeme trajanja u minutama: ");
                 parseSuccess = int.TryParse(Console.ReadLine(), out expDuration);
-            } while (!parseSuccess);
+            } while (!parseSuccess || expDuration<=0);
 
             var newTask = new ProjectTask(name, description, dueDate, project, expDuration);
 
@@ -518,24 +520,46 @@ namespace Project_manager_app
                 total += task.ExpectedDuration;
             }
 
-            Console.WriteLine($"Ocekivano vrijeme trajanja: {total}\n\n");
+            Console.WriteLine($"\nOcekivano vrijeme trajanja: {total}\n\n");
 
             Console.WriteLine("Pritisnite bilo koju tipku za izlaz...");
             Console.ReadKey();
         }
         static void ProjectMenu(Dictionary<Project, List<ProjectTask>> mainDict)
         {
-            Console.WriteLine("Odabrali ste opciju za rad na pojedinom projektu\n\n");
-
 
             var input = "";
+            Project currentProject = null;
 
             do
             {
                 Console.Clear();
 
-                var currentProject = ChooseProject(mainDict);
-                var currentTask = ChooseProjectTask(currentProject);
+                Console.WriteLine("Rad na pojedinom projektu\n\n");
+
+
+                if(currentProject is null)
+                {
+
+                    currentProject = ChooseProject(mainDict);
+                }
+
+                else
+                {
+                    Console.Write("Jeli zelite nastavit? (d/n): ");
+
+                    if (!UserYesOrNo())
+                        return;
+
+                    Console.WriteLine($"Jeli želite nastavit rad na istom projektu -> projekt: {currentProject.Name}? (d/n)");
+                    var choice = UserYesOrNo();
+                    if (!choice)
+                    {
+                        currentProject = ChooseProject(mainDict);
+                    }
+                }
+
+                
 
                 Console.Clear();
 
@@ -576,7 +600,7 @@ namespace Project_manager_app
                         break;
                 }
 
-            } while (String.IsNullOrEmpty(input) || input == "q");
+            } while (String.IsNullOrEmpty(input) || input != "q");
 
 
         }
@@ -584,7 +608,7 @@ namespace Project_manager_app
         static void ProjectTaskDetails(ProjectTask projectTask)
         {
             Console.WriteLine("Odabrali ste opciju za prikaz detalja zadatka\n\n");
-            Console.WriteLine($"Naziv: {projectTask.Name}\n" + $"Opis: {projectTask.Description}\n" + $"Rok: {projectTask.DueDate}\n"
+            Console.WriteLine($"Naziv: {projectTask.Name}\n" + $"Opis: {projectTask.Description}\n" + $"Rok: {projectTask.DueDate.ToShortDateString()}\n"
                 + $"Status: {projectTask.Status}\n" +
                 $"Projekt kojem pripada: {projectTask.ParentProject.Name}\n\nGotov ispis...");
             Console.ReadKey();
