@@ -497,6 +497,13 @@ namespace Project_manager_app
         {
             Console.WriteLine("Odabrali ste opciju za brisanje zadatka\n\n");
 
+            if (project.Status == Status.Finished)
+            {
+                Console.WriteLine("Projekt gotov - brisanje nije moguce\n\nPritisnite bilo koju tipku za povratak...");
+                Console.ReadKey();
+                return;
+            }
+
             var toBeRemoved = ChooseProjectTask(project);
 
             Console.WriteLine($"Jeste sigurni da zelite izbrisati zadatak {toBeRemoved.Name}");
@@ -750,6 +757,7 @@ namespace Project_manager_app
                         if(isFinished)
                         {
                             Console.WriteLine("Gotov zadatak - uredivanje nedostupno...");
+                            Console.ReadKey();
                             break;
                         }
                         UpdateProjectTaskStatus(currentTask);
